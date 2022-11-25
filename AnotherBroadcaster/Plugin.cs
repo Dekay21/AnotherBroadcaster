@@ -1,7 +1,7 @@
 ﻿using Terraria;
 using TerrariaApi.Server;
 
-namespace PluginTemplate
+namespace AnotherBroadcaster
 {
     [ApiVersion(2, 1)]
     public class Plugin : TerrariaPlugin
@@ -9,7 +9,7 @@ namespace PluginTemplate
         /// <summary>
         /// The name of the plugin.
         /// </summary>
-        public override string Name => "PluginTemplate";
+        public override string Name => "AnotherBroadcaster";
 
         /// <summary>
         /// The version of the plugin in its current state.
@@ -24,7 +24,7 @@ namespace PluginTemplate
         /// <summary>
         /// A short, one-line, description of the plugin's purpose.
         /// </summary>
-        public override string Description => "Template to create new Tshock Plugins";
+        public override string Description => "Creating your custom broadcasting messages";
 
         /// <summary>
         /// The plugin's constructor
