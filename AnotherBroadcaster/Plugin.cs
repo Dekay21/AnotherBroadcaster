@@ -1,5 +1,8 @@
-﻿using Terraria;
+﻿using Newtonsoft.Json;
+using Terraria;
 using TerrariaApi.Server;
+using TShockAPI;
+using TShockAPI.Hooks;
 
 namespace AnotherBroadcaster
 {
@@ -26,6 +29,10 @@ namespace AnotherBroadcaster
         /// </summary>
         public override string Description => "Creating your custom broadcasting messages";
 
+        private Config config;
+        private static bool isBroadcasting = false;
+        public static bool IsBroadcasting { get { return isBroadcasting; } }
+
         /// <summary>
         /// The plugin's constructor
         /// Set your plugin's order (optional) and any other constructor logic here
@@ -40,7 +47,41 @@ namespace AnotherBroadcaster
         /// </summary>
         public override void Initialize()
         {
-            // Initialize here
+            ServerApi.Hooks.GameInitialize.Register(this, GameInitialized);
+            ServerApi.Hooks.NetGreetPlayer.Register(this, PlayerJoined);
+            ServerApi.Hooks.ServerLeave.Register(this, PlayerLeft);
+            GeneralHooks.ReloadEvent += Reload;
+
+            config = Config.Load();
+        }
+
+        private void GameInitialized(EventArgs args)
+        {
+            //TSPlayer.All.SendMessage("Hello there", new Microsoft.Xna.Framework.Color(255, 255, 255));
+        }
+
+        private void PlayerJoined(GreetPlayerEventArgs args)
+        {
+            if (TShock.Players.Any(player => player != null))
+            {
+                isBroadcasting = true;
+                config.Messages.ForEach(m => m.Broadcast());
+            }
+            
+        }
+
+        private void PlayerLeft(LeaveEventArgs args)
+        {
+            isBroadcasting = TShock.Players.Any(player => player != null);
+        }
+
+        private void Reload(ReloadEventArgs e)
+        {
+            isBroadcasting = false;
+            config.Messages.ForEach(m => m.Active = false);
+            config = Config.Load();
+            isBroadcasting = TShock.Players.Any(player => player != null);
+            config.Messages.ForEach(m => m.Broadcast());
         }
 
         /// <summary>
