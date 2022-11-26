@@ -16,6 +16,6 @@ It contains a list of all broadcasting messages
 ```
 `Text`: Text of the Broadcast
 
-`Color`: Text Color (#rrggbb in hex-format)
+`Color`: Text Color (#rrggbb in hex-format or [Color name](https://www.foszor.com/blog/xna-color-chart/))
 
 `Interval`: Interval at which the message is sent (supports `d` (days), `h` (hours), `min` (minutes) and `s` (seconds))
