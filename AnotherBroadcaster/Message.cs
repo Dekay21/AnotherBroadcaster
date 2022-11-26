@@ -68,12 +68,12 @@ namespace AnotherBroadcaster
                 byte g = byte.Parse(Color[3..5], System.Globalization.NumberStyles.HexNumber);
                 byte b = byte.Parse(Color[5..7], System.Globalization.NumberStyles.HexNumber);
                 return new Microsoft.Xna.Framework.Color(r, g, b);
-            } /*else // TODO get color from color name
+            } else
             {
                 var c = typeof(Microsoft.Xna.Framework.Color).GetProperty(Color);
                 if (c != null)
                     return (Microsoft.Xna.Framework.Color)c.GetValue(null);
-            }*/
+            }
             TShock.Log.ConsoleError("Invalid color encountered: " + Color);
             return Microsoft.Xna.Framework.Color.White;
         }
