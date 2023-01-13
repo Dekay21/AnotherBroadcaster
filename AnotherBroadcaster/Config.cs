@@ -19,17 +19,6 @@ namespace AnotherBroadcaster
                 List<Message> messages = JsonConvert.DeserializeObject<List<Message>>(configText) ?? throw new Exception("Config is empty");
                 config.Messages = messages;
             }
-            /*else if (File.Exists(configPath + ".yml"))
-            {
-                // TODO Not sure if i want to add yaml support
-                Console.WriteLine("Parsing yml-config");
-                Console.WriteLine("Parsing json-config");
-                string configText = File.ReadAllText(configPath + ".json");
-                Config config = new();
-                List<Message> messages = new DeserializerBuilder().Build().Deserialize<List<Message>>(configText);
-                config.Messages = messages;
-                return config;
-            }*/
             else
             {
                 Message exampleMessage = new()
@@ -45,11 +34,6 @@ namespace AnotherBroadcaster
             }
             TShock.Log.ConsoleDebug("Loaded config:\n" + JsonConvert.SerializeObject(config, Formatting.Indented));
             return config;
-        }
-
-        public void Save()
-        {
-
         }
     }
 }

@@ -29,8 +29,7 @@ namespace AnotherBroadcaster
         public override string Description => "Creating your custom broadcasting messages";
 
         private Config config;
-        private static bool isBroadcasting = false;
-        public static bool IsBroadcasting { get { return isBroadcasting; } }
+        public static bool IsBroadcasting { get { return TShock.Players.Any(player => player != null); } }
 
         /// <summary>
         /// The plugin's constructor
@@ -46,40 +45,25 @@ namespace AnotherBroadcaster
         /// </summary>
         public override void Initialize()
         {
-            ServerApi.Hooks.GameInitialize.Register(this, GameInitialized);
             ServerApi.Hooks.NetGreetPlayer.Register(this, PlayerJoined);
-            ServerApi.Hooks.ServerLeave.Register(this, PlayerLeft);
             GeneralHooks.ReloadEvent += Reload;
 
             config = Config.Load();
         }
 
-        private void GameInitialized(EventArgs args)
-        {
-            //TSPlayer.All.SendMessage("Hello there", new Microsoft.Xna.Framework.Color(255, 255, 255));
-        }
-
         private void PlayerJoined(GreetPlayerEventArgs args)
         {
-            if (TShock.Players.Any(player => player != null))
+            if (TShock.Players.Count(player => player != null) == 1)
             {
-                isBroadcasting = true;
                 config.Messages.ForEach(m => m.Broadcast());
             }
             
         }
 
-        private void PlayerLeft(LeaveEventArgs args)
-        {
-            isBroadcasting = TShock.Players.Any(player => player != null);
-        }
-
         private void Reload(ReloadEventArgs e)
         {
-            isBroadcasting = false;
             config.Messages.ForEach(m => m.Active = false);
             config = Config.Load();
-            isBroadcasting = TShock.Players.Any(player => player != null);
             config.Messages.ForEach(m => m.Broadcast());
         }
 
@@ -91,7 +75,8 @@ namespace AnotherBroadcaster
         {
             if (disposing)
             {
-                // Dispose here
+                ServerApi.Hooks.NetGreetPlayer.Deregister(this, PlayerJoined);
+                GeneralHooks.ReloadEvent -= Reload;
             }
             base.Dispose(disposing);
         }

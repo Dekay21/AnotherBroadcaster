@@ -24,40 +24,23 @@ namespace AnotherBroadcaster
             if (Active && Plugin.IsBroadcasting)
             {
                 var c = ColorObject();
-                TShock.Players.ForEach(player =>
-                {
-                    if (player != null)
-                    {
-                        player.SendMessage(Text, c);
-                    }
-                });
+
+                TShock.Log.ConsoleInfo(Text);
+                TSPlayer.All.SendMessage(Text, c);
                 Broadcast();
             }
         }
 
         private int IntervalMillis()
         {
-            int result = 0;
+            int result;
+            if (TShock.Utils.TryParseTime(Interval, out result))
+            {
+                return result * 1000;
+            }
 
-            string days = new Regex("\\d+d").Match(Interval).Value;
-            if (days.Length > 1)
-                result += int.Parse(days[..(days.Length - 1)]);
-            result *= 60;
-
-            string hours = new Regex("\\d+h").Match(Interval).Value;
-            if (hours.Length > 1)
-                result += int.Parse(hours[..(hours.Length - 1)]);
-            result *= 60;
-
-            string minutes = new Regex("\\d+min").Match(Interval).Value;
-            if (minutes.Length > 3)
-                result += int.Parse(minutes[..(minutes.Length - 3)]);
-            result *= 60;
-
-            string seconds = new Regex("\\d+s").Match(Interval).Value;
-            if (seconds.Length > 1)
-                result += int.Parse(seconds[..(seconds.Length - 1)]);
-            return result * 1000;
+            TShock.Log.ConsoleError("Could not parse interval " + Interval);
+            return 10000;
         }
 
         private Microsoft.Xna.Framework.Color ColorObject()
