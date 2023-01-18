@@ -8,9 +8,14 @@ It contains a list of all broadcasting messages
 ```json
 [
     {
-        "Text": "[Broadcast] This is an example",
+        "Text": "Message 1",
         "Color": "#ff00ff",
         "Interval": "2h30m"
+    },
+    {
+        "Text": "Message 2",
+        "Color": "Blue",
+        "Interval": "1h"
     }
 ]
 ```
